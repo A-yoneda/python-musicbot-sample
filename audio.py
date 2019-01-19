@@ -145,6 +145,7 @@ async def queue_songs(con, skip, clear):
             song = await bot.voice_client_in(con.message.server).create_ytdl_player(song_names[con.message.server.id][0], ytdl_options=opts, after=lambda: bot.loop.create_task(after_song(con, False, False)))
             servers_songs[con.message.server.id] = song
             servers_songs[con.message.server.id].start()
+            servers_songs[con.message.server.id].volume =0.2 #initVolume
             await bot.delete_message(now_playing[con.message.server.id])
             msg = await bot.send_message(con.message.channel, embed=pack)
             now_playing[con.message.server.id] = msg
@@ -183,7 +184,7 @@ async def play(con, *, url):
                 song = await bot.voice_client_in(con.message.server).create_ytdl_player(song_names[con.message.server.id][0], ytdl_options=opts, after=lambda: bot.loop.create_task(after_song(con, False, False)))
                 servers_songs[con.message.server.id] = song
                 servers_songs[con.message.server.id].start()
-                servers_songs[con.message.server.id].volume =0.2
+                servers_songs[con.message.server.id].volume =0.2 #initVolume
                 r = rq.Session().get('https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=1&q={}&key=AIzaSyDy4gizNmXYWykfUACzU_RsaHtKVvuZb9k'.format(url)).json()
                 pack = discord.Embed(title=r['items'][0]['snippet']['title'],
                                      url="https://www.youtube.com/watch?v={}".format(r['items'][0]['id']['videoId']))
