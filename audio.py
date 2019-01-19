@@ -169,6 +169,7 @@ async def play(con, *, url):
     if con.message.channel.is_private == False: #command is used in a server
         rq_channel[con.message.server.id]=con.message.channel.id
         if bot.is_voice_connected(con.message.server) == False:
+            servers_songs[con.message.server.id].volume =0.2
             await bot.join_voice_channel(con.message.author.voice.voice_channel)
 
         if bot.is_voice_connected(con.message.server) == True:
@@ -227,6 +228,7 @@ async def join(con,*,channel=None):
             if con.message.author.voice_channel == None:
                 await bot.send_message(con.message.channel,"**You must be in a voice channel or give a voice channel name to join**")
             if con.message.author.voice_channel != None:
+                servers_songs[con.message.server.id].volume =0.2
                 await bot.join_voice_channel(con.message.author.voice.voice_channel)
 
         if voice_status == False and channel != None:  # PICKING A VOICE CHANNEL
