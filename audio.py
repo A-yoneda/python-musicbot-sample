@@ -169,7 +169,6 @@ async def play(con, *, url):
     if con.message.channel.is_private == False: #command is used in a server
         rq_channel[con.message.server.id]=con.message.channel.id
         if bot.is_voice_connected(con.message.server) == False:
-            servers_songs[con.message.server.id].volume =0.2
             await bot.join_voice_channel(con.message.author.voice.voice_channel)
 
         if bot.is_voice_connected(con.message.server) == True:
@@ -184,6 +183,7 @@ async def play(con, *, url):
                 song = await bot.voice_client_in(con.message.server).create_ytdl_player(song_names[con.message.server.id][0], ytdl_options=opts, after=lambda: bot.loop.create_task(after_song(con, False, False)))
                 servers_songs[con.message.server.id] = song
                 servers_songs[con.message.server.id].start()
+                servers_songs[con.message.server.id].volume =0.2
                 r = rq.Session().get('https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=1&q={}&key=AIzaSyDy4gizNmXYWykfUACzU_RsaHtKVvuZb9k'.format(url)).json()
                 pack = discord.Embed(title=r['items'][0]['snippet']['title'],
                                      url="https://www.youtube.com/watch?v={}".format(r['items'][0]['id']['videoId']))
@@ -228,7 +228,6 @@ async def join(con,*,channel=None):
             if con.message.author.voice_channel == None:
                 await bot.send_message(con.message.channel,"**You must be in a voice channel or give a voice channel name to join**")
             if con.message.author.voice_channel != None:
-                servers_songs[con.message.server.id].volume =0.2
                 await bot.join_voice_channel(con.message.author.voice.voice_channel)
 
         if voice_status == False and channel != None:  # PICKING A VOICE CHANNEL
